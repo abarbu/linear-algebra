@@ -1,0 +1,22 @@
+;;;  -*- Hen -*-
+
+((egg "linear-algebra.egg")
+ (category math)
+ (author "Jeffrey Mark Siskind")
+ (maintainer "Andrei Barbu")
+ (license "GPL")
+ (doc-from-wiki)
+ (synopsis "Basic linear algebra: vectors, matrices and sparse matrices. AD-enabled.")
+ (depends
+  (setup-helper "1.5.2")
+  (miscmacros "2.91")
+  (check-errors "1.12.0")
+  (condition-utils "1.0.0")
+  (traversal "1.0")
+  (AD "1.0")
+  (define-structure "0.1"))
+ (test-depends test)
+ (files "linear-algebra.meta" 
+        "linear-algebra.release-info"
+        "linear-algebra.scm" 
+        "linear-algebra.setup"))
