@@ -1,0 +1,25 @@
+[[tags: egg math]]
+[[toc:]]
+
+Do not edit this page, it is maintained in the this package's [https://github.com/abarbu/linear-algebra github repository].
+
+= linear-algebra =
+
+This implements various linear algebra operations built on top of
+Scheme vectors and vectors of vectors.
+
+It's currently undocumented but will one day have documentation.
+
+=== License ===
+
+Copyright 2010-2012 Purdue University. All rights reserved.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses.

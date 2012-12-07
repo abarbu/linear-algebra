@@ -14,7 +14,7 @@
   (condition-utils "1.0.0")
   (traversal "1.0")
   (AD "1.0")
-  (define-structure "0.1"))
+  (define-structure "1.0"))
  (test-depends test)
  (files "linear-algebra.meta" 
         "linear-algebra.release-info"

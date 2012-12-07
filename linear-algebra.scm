@@ -16,6 +16,8 @@
 
 (define three-sixty/two-pi (/ 360.0 two-pi))
 
+(define (sqr x) (* x x))
+
 ;;; Vectors
 
 (define-structure line-segment p q)
@@ -277,6 +279,9 @@
       write-line-segments-to-file)))
 
 ;;; Matrices
+
+(define (matrix? v)
+ (and (vector? v) (or (= (vector-length v) 0) (vector? (vector-ref v 0)))))
 
 (define (make-matrix m n . &rest)
  (cond ((null? &rest) (map-n-vector (lambda (i) (make-vector n)) m))
@@ -764,4 +769,215 @@
 	       (sparse-matrix-blank sparse-matrix)))
 	  (loop (sparse-matrix-row-down sparse-matrix-row)))
       (sparse-matrix-blank sparse-matrix))))
+
+;;; Misc
+
+(define (every-n-2d p v w)
+ (every-n (lambda (a) (every-n (lambda (b) (p a b)) w)) v))
+(define (every-n-3d p v w x)
+ (every-n (lambda (a) (every-n-2d (lambda (b c) (p a b c)) w x)) v))
+(define (every-n-4d p v w x y)
+ (every-n-2d (lambda (a b) (every-n-2d (lambda (c d) (p a b c d)) x y)) v w))
+(define (every-n-5d p v w x y z)
+ (every-n (lambda (a) (every-n-4d (lambda (b c d e) (p a b c d e)) w x y z)) v))
+(define (map-n-vector-2d f m n)
+ (map-n-vector (lambda (a) (map-n-vector (lambda (b) (f a b)) n)) m))
+(define (map-n-vector-3d f m n p)
+ (map-n-vector (lambda (a) (map-n-vector-2d (lambda (b c) (f a b c)) n p)) m))
+(define (map-n-vector-4d f m n p q)
+ (map-n-vector-2d (lambda (a b) (map-n-vector-2d (lambda (c d) (f a b c d)) p q)) m n))
+(define (map-n-vector-5d f m n p q r)
+ (map-n-vector-3d (lambda (a b c) (map-n-vector-2d (lambda (d e) (f a b c d e)) q r)) m n p))
+(define (product-2d f m n) (product (lambda (a) (product (lambda (b) (f a b)) n)) m))
+(define (ref-1d m a) (vector-ref m a))
+(define (ref-2d m a b) (matrix-ref m a b))
+(define (ref-3d m a b c) (matrix-ref (vector-ref m a) b c))
+(define (ref-4d m a b c d) (matrix-ref (matrix-ref m a b) c d))
+(define (ref-5d m a b c d e) (matrix-ref (ref-3d m a b c) d e))
+(define (sum-2d f m n) (sum (lambda (a) (sum (lambda (b) (f a b)) n)) m))
+(define (sum-3d f m n p) (sum-2d (lambda (a b) (sum (lambda (c) (f a b c)) p)) m n))
+(define (sum-4d f m n p q) (sum-2d (lambda (a b) (sum-2d (lambda (c d) (f a b c d)) p q)) m n))
+(define (sum-pairs f m) (sum (lambda (a) (sum (lambda (b) (f a b)) a)) m))
+(define (vector-sum f n i)
+ (let loop ((n (- n 1)) (c i))
+  (if (negative? n) c (loop (- n 1) (v+ c (f n))))))
+(define (vector-sum-2d f m n i)
+ (vector-sum (lambda (a) (vector-sum (lambda (b) (f a b)) n i)) m i))
+(define (matrix-sum f n i)
+ (let loop ((n (- n 1)) (c i))
+  (if (negative? n) c (loop (- n 1) (m+ c (f n))))))
+(define (matrix-sum-2d f m n i)
+ (matrix-sum (lambda (a) (matrix-sum (lambda (b) (f a b)) n i)) m i))
+(define (v/k v k) (k*v (/ 1 k) v))
+(define (m/k m k) (k*m (/ 1 k) m))
+(define (v*m*v v m) (dot v (m*v m v)))
+(define (sum-f f l) (qmap-reduce + 0 f l))
+(define (sum-vector v) (qreduce-vector + v 0))
+(define (sum-vector-f f v) (qmap-reduce-vector + 0 f v))
+
+(define (append-vector vec1 vec2)
+ (let ((l1 (vector-length vec1))
+       (l2 (vector-length vec2)))
+  (map-n-vector
+   (lambda (i)
+    (if (< i l1) (vector-ref vec1 i) (vector-ref vec2 (- i l1))))
+   (+ l1 l2))))
+
+(define (shape-matrix v c)
+ (let* ((r (/ (vector-length v) c))
+	(m (make-vector r)))
+  (for-each-n
+   (lambda (i) (vector-set! m i (subvector v (* i c) (* (+ i 1) c))))
+   r)
+  m))
+
+(define (unshape-matrix m)
+ (if (and (not (equal? m '#())) (matrix? m))
+     (unshape-matrix (reduce-vector append-vector m '#()))
+     m))
+
+(define (crop m x y w h)
+ (map-vector
+  (lambda (row)
+   (subvector row x (+ x w)))
+  (subvector m y (+ y h))))
+
+(define (matrix-ref-nd m . is)
+ (if (= (length is) 1)
+     (vector-ref m (first is))
+     (apply matrix-ref-nd `(,(vector-ref m (first is)) ,@(rest is)))))
+(define (matrix-3d-ref a s i j) (matrix-ref-nd a s i j))
+
+(define (matrix-set-nd! m v . is)
+ (if (= (length is) 1)
+     (begin (write m) (newline) (vector-set! m (first is) v))
+     (apply matrix-set-nd! `(,(vector-ref m (first is)) ,v ,@(rest is)))))
+(define (matrix-3d-set! a v s i j) (matrix-set-nd! a v s i j))
+
+(define (map-matrix-nd f m n)
+ (if (= n 1)
+     (map-vector f m)
+     (map-vector (lambda (m) (map-matrix-nd f m (- n 1))) m)))
+(define (for-each-matrix-nd f m n)
+ (if (= n 1)
+     (for-each-vector f m)
+     (for-each-vector (lambda (m) (for-each-matrix-nd f m (- n 1))) m)))
+(define (map-matrix f m) (map-matrix-nd f m 2))
+(define (for-each-matrix f m) (for-each-matrix-nd f m 2))
+(define (map-matrix-3d f m) (map-matrix-nd f m 3))
+(define (for-each-matrix-3d f m) (for-each-matrix-nd f m 3))
+
+(define (map-n-matrix f i j)
+ (map-n-vector (lambda (i) (map-n-vector (lambda (j) (f i j)) j)) i))
+(define (for-each-n-matrix f i j)
+ (for-each-n (lambda (i) (for-each-n (lambda (j) (f i j)) j)) i))
+
+(define (map-indexed-matrix f m)
+ (map-indexed-vector (lambda (r i) (map-indexed-vector (lambda (c j) (f c i j)) r)) m))
+(define (for-each-indexed-matrix f m)
+ (for-each-indexed-vector
+  (lambda (r i) (for-each-indexed-vector (lambda (c j) (f c i j)) r))
+  m))
+(define (map-indexed-matrix-3d f p)
+ (map-indexed-vector
+  (lambda (s l) (map-indexed-matrix (lambda (c i j) (f c l i j)) s))
+  p))
+(define (for-each-indexed-matrix-3d f p)
+ (for-each-indexed-vector
+  (lambda (s l) (for-each-indexed-matrix (lambda (c i j) (f c l i j)) s))
+  p))
+
+;;; Statistics, this probably doesn't belong here
+
+(define (list-mean p)
+ (if (vector? (car p))
+     (k*v  (/ 1 (length p)) (qreduce v+ p 0))
+     (/ (qreduce + p 0) (length p))))
+
+(define (list-covariance l)
+ (let ((mu (list-mean l)))
+  (k*m (/ (length l))
+       (qreduce m+ (map (lambda (e) (self-outer-product * (v- e mu))) l) #f))))
+
+(define (list-variance s)
+ (let ((mu (list-mean s)))
+  (/ (qreduce + (map (lambda (s) (sqr (- s mu))) s) 0) (length s))))
+
+(define (list-skewness l)
+ (let ((mu (list-mean l))
+       (sigma (list-variance l)))
+  (/ (* (/ (length l)) (qreduce + (map (lambda (e) (expt (-  e mu) 3)) l) 0))
+     (expt sigma (/ 3 2)))))
+
+(define (list-kurtosis l)
+ (let ((mu (list-mean l))
+       (sigma (list-variance l)))
+  (- (/ (* (/ (length l)) (qreduce + (map (lambda (e) (expt (-  e mu) 4)) l) 0))
+	(sqr sigma))
+     3)))
+
+(define (list-correlation l1 l2)
+ (let ((mu1 (list-mean l1)) (mu2 (list-mean l2))
+       (s1 (sqrt (list-variance l1))) (s2 (sqrt (list-variance l2))))
+  (/
+   (qreduce + (map (lambda (v1 v2) (* (- v1 mu1) (- v2 mu2))) l1 l2) 0)
+   (* (- (length l1) 1) s1 s2))))
+
+(define (vector-mean v)
+ (/ (qreduce-vector + v 0) (vector-length v)))
+
+(define (vector-variance v)
+ (let ((mu (vector-mean v)))
+  (/ (qmap-reduce-vector + 0 (lambda (s) (sqr (- s mu))) v) (vector-length v))))
+
+(define (vector-skewness v)
+ (let ((mu (vector-mean v))
+       (sigma (vector-variance v)))
+  (/ (* (/ (vector-length v)) (qmap-reduce-vector + 0 (lambda (e) (expt (- e mu) 3)) v))
+     (expt sigma (/ 3 2)))))
+
+(define (vector-kurtosis v)
+ (let ((mu (vector-mean v))
+       (sigma (vector-variance v)))
+  (- (/ (* (/ (vector-length v)) (qmap-reduce-vector + 0 (lambda (e) (expt (- e mu) 4)) v))
+	(sqr sigma))
+     3)))
+
+(define (vector-correlation v1 v2)
+ (let ((mu1 (vector-mean v1)) (mu2 (vector-mean v2))
+       (s1 (sqrt (vector-variance v1))) (s2 (sqrt (vector-variance v2))))
+  (/
+   (qmap-reduce-vector + 0 (lambda (v1 v2) (* (- v1 mu1) (- v2 mu2))) v1 v2)
+   (* (- (length v1) 1) s1 s2))))
+
+(define (coefficient-of-bimodality v)
+ (cond ((list? v)
+	(/ (+ 1 (sqr (list-skewness v))) (+ (list-kurtosis v) 3)))
+       ((vector? v)
+	(/ (+ 1 (sqr (vector-skewness v))) (+ (vector-kurtosis v) 3)))
+       (else (error "coefficient-of-bimodality"))))
+
+(define (vectors-mean values)
+ (k*v (/ 1 (vector-length values)) (qreduce-vector v+ values #f)))
+
+(define (vectors-variance mu values)
+ (k*m (/ 1 (vector-length values))
+      (qreduce-vector m+
+		     (map-vector
+		      (lambda (value)
+		       (self-outer-product * (v- value mu)))
+		      values)
+		     #f)))
+
+(define (mahalanobis-distance val mu isigma)
+ (let ((dev (v- val mu)))
+  (sqrt (abs (dot dev (m*v isigma dev))))))
+
+(define (frequencies l)
+ (let loop ((f '()) (l l))
+  (if (null? l)
+      f
+      (loop (cons `(,(car l) ,(count (car l) l)) f)
+	    (remove (car l) l)))))
+
 )
