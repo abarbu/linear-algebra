@@ -740,12 +740,12 @@
 	   (- (vector-ref (eigenvalues m) 1) (matrix-ref m 1 1)))))
 
 (define (left-pseudo-inverse m)
- (let ((inverse (invert-matrix (m* (transpose m) m))))
-  (if inverse (m* inverse (transpose m)) #f)))
+ (let ((inverse (invert-matrix (m* (transpose-matrix m) m))))
+  (if inverse (m* inverse (transpose-matrix m)) #f)))
 
 (define (right-pseudo-inverse m)
- (let ((inverse (invert-matrix (m* m (transpose m)))))
-  (if inverse (m* (transpose m) inverse) #f)))
+ (let ((inverse (invert-matrix (m* m (transpose-matrix m)))))
+  (if inverse (m* (transpose-matrix m) inverse) #f)))
 
 ;;; Sparse Matrices
 
