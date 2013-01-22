@@ -283,6 +283,8 @@
 (define (matrix? v)
  (and (vector? v) (or (= (vector-length v) 0) (vector? (vector-ref v 0)))))
 
+(define (list->matrix l) (list->vector (map list->vector l)))
+
 (define (make-matrix m n . &rest)
  (cond ((null? &rest) (map-n-vector (lambda (i) (make-vector n)) m))
        ((null? (rest &rest))
