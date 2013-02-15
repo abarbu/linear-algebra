@@ -1,13 +1,187 @@
+
 = linear-algebra =
 
-This implements various linear algebra operations built on top of
-Scheme vectors and vectors of vectors.
+This implements various linear algebra and other math operations. Much
+of this code is originally from Jeff Siskind's QobiScheme.
 
-It's currently undocumented but will one day have documentation.
+=== Line segments ===
+
+:(define-structure line-segment p q)
+:(p l)
+:(q l)
+:(collinear? l1 l2)
+:(point-on-line-segment? r l)
+:(intersection-point l1 l2)
+:(cross? l1 l2)
+:(intersect? l1 l2)
+:(line-tangent l)
+:(normal-2d l)
+:(line-segment-length l)
+:(read-line-segments-from-file pathname)
+:(write-line-segments-to-file line-segments pathname)
+
+=== Vectors ===
+
+:(x v)
+:(y v)
+:(z v)
+:(dot u v)
+:(cross-2d u v)
+:(cross u v)
+:(v+ u v)
+:(v- u v)
+:(k*v k u)
+:(v/k v k)
+:(v= u v)
+:(rotate-90 u)
+:(rotate-180 u)
+:(rotate-270 u)
+:(perpendicular? u v)
+:(parallel? u v)
+:(magnitude-squared v)
+:(magnitude v)
+:(unit v)
+:(distance-squared u v)
+:(distance u v)
+:(clockwise-angle? u v w)
+:(clockwise-or-same-angle? u v w)
+:(append-vector vec1 vec2)
+
+=== Matrices ===
+
+:(matrix? v)
+:(list->matrix l)
+:(make-matrix m n . &rest)
+:(make-3-by-3-matrix a11 a12 a13 a21 a22 a23 a31 a32 a33)
+:(matrix-copy m)
+:(matrix-rows a)
+:(matrix-columns a)
+:(matrix-ref a i j)
+:(matrix-set! a i j x)
+:(matrix-row-ref a i)
+:(matrix-column-ref a j)
+:(matrix-row-set! a i v)
+:(vector->row-matrix v)
+:(vector->column-matrix v)
+:(m+ a b)
+:(m- a b)
+:(m*v a v)
+:(transpose-matrix a)
+:(outer-product f u v)
+:(self-outer-product f v)
+:(m* a b)
+:(v*m v a)
+:(k*m k m)
+:(m/k m k)
+:(v*m*v v m)
+:(determinant a)
+:(invert-matrix a)
+:(simplex a m1 m2 m3)
+:(jacobi a)
+:(eigenvalues a)
+:(eigenvectors a)
+:(vector->diagonal-matrix v)
+:(identity-matrix n)
+:(clip-eigenvalues a v)
+:(eigenvector-angle1 m)
+:(eigenvector-angle2 m)
+:(left-pseudo-inverse m)
+:(right-pseudo-inverse m)
+:(ref-1d m a)
+:(ref-2d m a b)
+:(ref-3d m a b c)
+:(ref-4d m a b c d)
+:(ref-5d m a b c d e)
+:(map-n-vector-2d f m n)
+:(map-n-vector-3d f m n p)
+:(map-n-vector-4d f m n p q)
+:(map-n-vector-5d f m n p q r)
+:(matrix-sum f n i)
+:(matrix-sum-2d f m n i)
+:(shape-matrix v c)
+:(unshape-matrix m)
+:(crop m x y w h)
+:(matrix-ref-nd m . is)
+:(matrix-3d-ref a s i j)
+:(matrix-set-nd! m v . is)
+:(matrix-3d-set! a v s i j)
+:(map-matrix-nd f m n)
+:(for-each-matrix-nd f m n)
+:(map-matrix f m)
+:(for-each-matrix f m)
+:(map-matrix-3d f m)
+:(for-each-matrix-3d f m)
+:(map-n-matrix f i j)
+:(for-each-n-matrix f i j)
+:(map-indexed-matrix f m)
+:(for-each-indexed-matrix f m)
+:(map-indexed-matrix-3d f p)
+:(for-each-indexed-matrix-3d f p)
+
+=== Sparse matrices ===
+
+:(define-structure sparse-matrix row column blank)
+:(define-structure sparse-matrix-row element i up down)
+:(define-structure sparse-matrix-column element j left right)
+:(define-structure sparse-matrix-element value i up down j left right)
+:(create-sparse-matrix blank)
+:(sparse-matrix-ref sparse-matrix i j)
+
+=== Traversal ===
+
+:(every-n-2d p v w)
+:(every-n-3d p v w x)
+:(every-n-4d p v w x y)
+:(every-n-5d p v w x y z)
+:(product-2d f m n)
+:(sum-2d f m n)
+:(sum-3d f m n p)
+:(sum-4d f m n p q)
+:(sum-pairs f m)
+:(vector-sum f n i)
+:(vector-sum-2d f m n i)
+:(sum-f f l)
+:(sum-vector v)
+:(sum-vector-f f v)
+
+=== Statistics ===
+
+:(list-mean p)
+:(list-covariance l)
+:(list-variance s)
+:(list-skewness l)
+:(list-kurtosis l)
+:(list-correlation l1 l2)
+:(vector-mean v)
+:(vector-variance v)
+:(vector-skewness v)
+:(vector-kurtosis v)
+:(vector-correlation v1 v2)
+:(coefficient-of-bimodality v)
+:(vectors-mean values)
+:(vectors-variance mu values)
+:(mahalanobis-distance val mu isigma)
+:(frequencies l)
+
+=== Misc ===
+
+:*linear-algebra:epsilon*
+:pi
+:half-pi
+:two-pi
+:minus-pi
+:two-pi/360
+:three-sixty/two-pi
+:(sqr x)
+:(quadratic1 a b c)
+:(quadratic2 a b c)
 
 === License ===
 
 Copyright 2010-2012 Purdue University. All rights reserved.
+
+Contact Andrei Barbu, andrei@0xab.com
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

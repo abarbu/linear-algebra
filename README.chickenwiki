@@ -1,18 +1,192 @@
 [[tags: egg math]]
 [[toc:]]
 
-Do not edit this page, it is maintained in the this package's [https://github.com/abarbu/linear-algebra github repository].
+This page is maintained in the package's
+[[https://github.com/abarbu/linear-algebra|github repository]].
 
-= linear-algebra =
+= linear-algebra
 
-This implements various linear algebra operations built on top of
-Scheme vectors and vectors of vectors.
+This implements various linear algebra and other math operations. Much
+of this code is originally from Jeff Siskind's QobiScheme.
 
-It's currently undocumented but will one day have documentation.
+=== Line segments
 
-=== License ===
+<record>(define-structure line-segment p q)</record>
+<procedure>(p l)</procedure>
+<procedure>(q l)</procedure>
+<procedure>(collinear? l1 l2)</procedure>
+<procedure>(point-on-line-segment? r l)</procedure>
+<procedure>(intersection-point l1 l2)</procedure>
+<procedure>(cross? l1 l2)</procedure>
+<procedure>(intersect? l1 l2)</procedure>
+<procedure>(line-tangent l)</procedure>
+<procedure>(normal-2d l)</procedure>
+<procedure>(line-segment-length l)</procedure>
+<procedure>(read-line-segments-from-file pathname)</procedure>
+<procedure>(write-line-segments-to-file line-segments pathname)</procedure>
+
+=== Vectors
+
+<procedure>(x v)</procedure>
+<procedure>(y v)</procedure>
+<procedure>(z v)</procedure>
+<procedure>(dot u v)</procedure>
+<procedure>(cross-2d u v)</procedure>
+<procedure>(cross u v)</procedure>
+<procedure>(v+ u v)</procedure>
+<procedure>(v- u v)</procedure>
+<procedure>(k*v k u)</procedure>
+<procedure>(v/k v k)</procedure>
+<procedure>(v= u v)</procedure>
+<procedure>(rotate-90 u)</procedure>
+<procedure>(rotate-180 u)</procedure>
+<procedure>(rotate-270 u)</procedure>
+<procedure>(perpendicular? u v)</procedure>
+<procedure>(parallel? u v)</procedure>
+<procedure>(magnitude-squared v)</procedure>
+<procedure>(magnitude v)</procedure>
+<procedure>(unit v)</procedure>
+<procedure>(distance-squared u v)</procedure>
+<procedure>(distance u v)</procedure>
+<procedure>(clockwise-angle? u v w)</procedure>
+<procedure>(clockwise-or-same-angle? u v w)</procedure>
+<procedure>(append-vector vec1 vec2)</procedure>
+
+=== Matrices
+
+<procedure>(matrix? v)</procedure>
+<procedure>(list->matrix l)</procedure>
+<procedure>(make-matrix m n . &rest)</procedure>
+<procedure>(make-3-by-3-matrix a11 a12 a13 a21 a22 a23 a31 a32 a33)</procedure>
+<procedure>(matrix-copy m)</procedure>
+<procedure>(matrix-rows a)</procedure>
+<procedure>(matrix-columns a)</procedure>
+<procedure>(matrix-ref a i j)</procedure>
+<procedure>(matrix-set! a i j x)</procedure>
+<procedure>(matrix-row-ref a i)</procedure>
+<procedure>(matrix-column-ref a j)</procedure>
+<procedure>(matrix-row-set! a i v)</procedure>
+<procedure>(vector->row-matrix v)</procedure>
+<procedure>(vector->column-matrix v)</procedure>
+<procedure>(m+ a b)</procedure>
+<procedure>(m- a b)</procedure>
+<procedure>(m*v a v)</procedure>
+<procedure>(transpose-matrix a)</procedure>
+<procedure>(outer-product f u v)</procedure>
+<procedure>(self-outer-product f v)</procedure>
+<procedure>(m* a b)</procedure>
+<procedure>(v*m v a)</procedure>
+<procedure>(k*m k m)</procedure>
+<procedure>(m/k m k)</procedure>
+<procedure>(v*m*v v m)</procedure>
+<procedure>(determinant a)</procedure>
+<procedure>(invert-matrix a)</procedure>
+<procedure>(simplex a m1 m2 m3)</procedure>
+<procedure>(jacobi a)</procedure>
+<procedure>(eigenvalues a)</procedure>
+<procedure>(eigenvectors a)</procedure>
+<procedure>(vector->diagonal-matrix v)</procedure>
+<procedure>(identity-matrix n)</procedure>
+<procedure>(clip-eigenvalues a v)</procedure>
+<procedure>(eigenvector-angle1 m)</procedure>
+<procedure>(eigenvector-angle2 m)</procedure>
+<procedure>(left-pseudo-inverse m)</procedure>
+<procedure>(right-pseudo-inverse m)</procedure>
+<procedure>(ref-1d m a)</procedure>
+<procedure>(ref-2d m a b)</procedure>
+<procedure>(ref-3d m a b c)</procedure>
+<procedure>(ref-4d m a b c d)</procedure>
+<procedure>(ref-5d m a b c d e)</procedure>
+<procedure>(map-n-vector-2d f m n)</procedure>
+<procedure>(map-n-vector-3d f m n p)</procedure>
+<procedure>(map-n-vector-4d f m n p q)</procedure>
+<procedure>(map-n-vector-5d f m n p q r)</procedure>
+<procedure>(matrix-sum f n i)</procedure>
+<procedure>(matrix-sum-2d f m n i)</procedure>
+<procedure>(shape-matrix v c)</procedure>
+<procedure>(unshape-matrix m)</procedure>
+<procedure>(crop m x y w h)</procedure>
+<procedure>(matrix-ref-nd m . is)</procedure>
+<procedure>(matrix-3d-ref a s i j)</procedure>
+<procedure>(matrix-set-nd! m v . is)</procedure>
+<procedure>(matrix-3d-set! a v s i j)</procedure>
+<procedure>(map-matrix-nd f m n)</procedure>
+<procedure>(for-each-matrix-nd f m n)</procedure>
+<procedure>(map-matrix f m)</procedure>
+<procedure>(for-each-matrix f m)</procedure>
+<procedure>(map-matrix-3d f m)</procedure>
+<procedure>(for-each-matrix-3d f m)</procedure>
+<procedure>(map-n-matrix f i j)</procedure>
+<procedure>(for-each-n-matrix f i j)</procedure>
+<procedure>(map-indexed-matrix f m)</procedure>
+<procedure>(for-each-indexed-matrix f m)</procedure>
+<procedure>(map-indexed-matrix-3d f p)</procedure>
+<procedure>(for-each-indexed-matrix-3d f p)</procedure>
+
+=== Sparse matrices
+
+<record>(define-structure sparse-matrix row column blank)</record>
+<record>(define-structure sparse-matrix-row element i up down)</record>
+<record>(define-structure sparse-matrix-column element j left right)</record>
+<record>(define-structure sparse-matrix-element value i up down j left right)</record>
+<procedure>(create-sparse-matrix blank)</procedure>
+<procedure>(sparse-matrix-ref sparse-matrix i j)</procedure>
+
+=== Traversal
+
+<procedure>(every-n-2d p v w)</procedure>
+<procedure>(every-n-3d p v w x)</procedure>
+<procedure>(every-n-4d p v w x y)</procedure>
+<procedure>(every-n-5d p v w x y z)</procedure>
+<procedure>(product-2d f m n)</procedure>
+<procedure>(sum-2d f m n)</procedure>
+<procedure>(sum-3d f m n p)</procedure>
+<procedure>(sum-4d f m n p q)</procedure>
+<procedure>(sum-pairs f m)</procedure>
+<procedure>(vector-sum f n i)</procedure>
+<procedure>(vector-sum-2d f m n i)</procedure>
+<procedure>(sum-f f l)</procedure>
+<procedure>(sum-vector v)</procedure>
+<procedure>(sum-vector-f f v)</procedure>
+
+=== Statistics
+
+<procedure>(list-mean p)</procedure>
+<procedure>(list-covariance l)</procedure>
+<procedure>(list-variance s)</procedure>
+<procedure>(list-skewness l)</procedure>
+<procedure>(list-kurtosis l)</procedure>
+<procedure>(list-correlation l1 l2)</procedure>
+<procedure>(vector-mean v)</procedure>
+<procedure>(vector-variance v)</procedure>
+<procedure>(vector-skewness v)</procedure>
+<procedure>(vector-kurtosis v)</procedure>
+<procedure>(vector-correlation v1 v2)</procedure>
+<procedure>(coefficient-of-bimodality v)</procedure>
+<procedure>(vectors-mean values)</procedure>
+<procedure>(vectors-variance mu values)</procedure>
+<procedure>(mahalanobis-distance val mu isigma)</procedure>
+<procedure>(frequencies l)</procedure>
+
+=== Misc
+
+<parameter>*linear-algebra:epsilon*</parameter>
+<constant>pi</constant>
+<constant>half-pi</constant>
+<constant>two-pi</constant>
+<constant>minus-pi</constant>
+<constant>two-pi/360</constant>
+<constant>three-sixty/two-pi</constant>
+<procedure>(sqr x)</procedure>
+<procedure>(quadratic1 a b c)</procedure>
+<procedure>(quadratic2 a b c)</procedure>
+
+=== License
 
 Copyright 2010-2012 Purdue University. All rights reserved.
+
+Contact Andrei Barbu, andrei@0xab.com
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
