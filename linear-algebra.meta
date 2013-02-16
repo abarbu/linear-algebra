@@ -3,7 +3,7 @@
 ((category math)
  (author "Jeffrey Mark Siskind")
  (maintainer "Andrei Barbu")
- (license "GPL")
+ (license "LGPL")
  (synopsis "Basic linear algebra: vectors, matrices, and sparse matrices along with related operations")
  (depends setup-helper miscmacros check-errors
           condition-utils traversal AD define-structure)
