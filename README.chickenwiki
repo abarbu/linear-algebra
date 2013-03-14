@@ -35,8 +35,13 @@ of this code is originally from Jeff Siskind's QobiScheme.
 <procedure>(cross u v)</procedure>
 <procedure>(v+ u v)</procedure>
 <procedure>(v- u v)</procedure>
-<procedure>(k*v k u)</procedure>
+<procedure>(k*v k v)</procedure>
+<procedure>(v*k v k)</procedure>
+<procedure>(k+v k v)</procedure>
+<procedure>(v+k v k)</procedure>
 <procedure>(v/k v k)</procedure>
+<procedure>(v* u v)</procedure>
+<procedure>(v/ u v)</procedure>
 <procedure>(v= u v)</procedure>
 <procedure>(rotate-90 u)</procedure>
 <procedure>(rotate-180 u)</procedure>
@@ -70,13 +75,18 @@ of this code is originally from Jeff Siskind's QobiScheme.
 <procedure>(vector->column-matrix v)</procedure>
 <procedure>(m+ a b)</procedure>
 <procedure>(m- a b)</procedure>
+<procedure>(m+k m k)</procedure>
+<procedure>(k+m k m)</procedure>
 <procedure>(m*v a v)</procedure>
 <procedure>(transpose-matrix a)</procedure>
 <procedure>(outer-product f u v)</procedure>
 <procedure>(self-outer-product f v)</procedure>
 <procedure>(m* a b)</procedure>
+<procedure>(m*. a b)</procedure>
+<procedure>(m/. a b)</procedure>
 <procedure>(v*m v a)</procedure>
 <procedure>(k*m k m)</procedure>
+<procedure>(m*k m k)</procedure>
 <procedure>(m/k m k)</procedure>
 <procedure>(v*m*v v m)</procedure>
 <procedure>(determinant a)</procedure>

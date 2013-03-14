@@ -43,10 +43,18 @@
 	 (- (* (x u) (y v)) (* (x v) (y u)))))
 
 (define (v+ u v) (map-vector +-two u v))
-
 (define (v- u v) (map-vector --two u v))
 
-(define (k*v k u) (map-vector (lambda (x) (* k x)) u))
+(define (k*v k v) (map-vector (lambda (x) (* k x)) v))
+(define (v*k v k) (k*v k v))
+
+(define (v/k v k) (k*v (/ 1 k) v))
+
+(define (v* v u) (map-vector *-two v u))
+(define (v/ v u) (map-vector /-two v u))
+
+(define (k+v k v) (map-vector (lambda (x) (+ k x)) v))
+(define (v+k v k) (k+v k v))
 
 (define (v= u v) (every-vector =-two u v))
 
@@ -318,8 +326,10 @@
 (define (vector->column-matrix v) (map-vector vector v))
 
 (define (m+ a b) (map-vector v+ a b))
-
 (define (m- a b) (map-vector v- a b))
+
+(define (m+k m k) (map-matrix (lambda (e) (+ e k)) m))
+(define (k+m k m) (m+k m k))
 
 (define (m*v a v) (map-vector (lambda (u) (dot u v)) a))
 
@@ -335,8 +345,12 @@
 
 (define (v*m v a) (m* (vector->row-matrix v) a))
 
-(define (k*m k m)
- (map-vector (lambda (row) (map-vector (lambda (e) (* k e)) row)) m))
+(define (k*m k m) (map-vector (lambda (row) (map-vector (lambda (e) (* k e)) row)) m))
+(define (m*k m k) (k*m k m))
+(define (m/k m k) (k*m (/ 1 k) m))
+
+(define (m*. m1 m2) (map-indexed-matrix (lambda (e1 i j) (* e1 (matrix-ref m2 i j))) m1))
+(define (m/. m1 m2) (map-indexed-matrix (lambda (e1 i j) (/ e1 (matrix-ref m2 i j))) m1))
 
 (define (determinant a)
  ;; The constants are hardwired to be inexact for efficiency.
@@ -818,8 +832,6 @@
   (if (negative? n) c (loop (- n 1) (m+ c (f n))))))
 (define (matrix-sum-2d f m n i)
  (matrix-sum (lambda (a) (matrix-sum (lambda (b) (f a b)) n i)) m i))
-(define (v/k v k) (k*v (/ 1 k) v))
-(define (m/k m k) (k*m (/ 1 k) m))
 (define (v*m*v v m) (dot v (m*v m v)))
 (define (sum-f f l) (qmap-reduce + 0 f l))
 (define (sum-vector v) (qreduce-vector + v 0))

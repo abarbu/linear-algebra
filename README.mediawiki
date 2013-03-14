@@ -1,5 +1,5 @@
 
-= linear-algebra =
+== linear-algebra ==
 
 This implements various linear algebra and other math operations. Much
 of this code is originally from Jeff Siskind's QobiScheme.
@@ -30,8 +30,13 @@ of this code is originally from Jeff Siskind's QobiScheme.
 :(cross u v)
 :(v+ u v)
 :(v- u v)
-:(k*v k u)
+:(k*v k v)
+:(v*k v k)
+:(k+v k v)
+:(v+k v k)
 :(v/k v k)
+:(v* u v)
+:(v/ u v)
 :(v= u v)
 :(rotate-90 u)
 :(rotate-180 u)
@@ -65,13 +70,18 @@ of this code is originally from Jeff Siskind's QobiScheme.
 :(vector->column-matrix v)
 :(m+ a b)
 :(m- a b)
+:(m+k m k)
+:(k+m k m)
 :(m*v a v)
 :(transpose-matrix a)
 :(outer-product f u v)
 :(self-outer-product f v)
 :(m* a b)
+:(m*. a b)
+:(m/. a b)
 :(v*m v a)
 :(k*m k m)
+:(m*k m k)
 :(m/k m k)
 :(v*m*v v m)
 :(determinant a)
@@ -178,18 +188,18 @@ of this code is originally from Jeff Siskind's QobiScheme.
 
 === License ===
 
-Copyright 2010-2012 Purdue University. All rights reserved.
+   Copyright 2010-2012 Purdue University. All rights reserved.
 
-Contact Andrei Barbu, andrei@0xab.com
+   Contact Andrei Barbu, andrei@0xab.com.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see http://www.gnu.org/licenses.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program.  If not, see http://www.gnu.org/licenses.
 __NOTOC__
