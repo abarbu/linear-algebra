@@ -331,9 +331,12 @@
 (define (m+k m k) (map-matrix (lambda (e) (+ e k)) m))
 (define (k+m k m) (m+k m k))
 
+(define (m+k-diagonal m k)
+ (map-vector (lambda (x i) (map-vector (lambda (e j) (if (= i j) (+ e k) e)) x)) m))
+
 (define (m*v a v) (map-vector (lambda (u) (dot u v)) a))
 
-(define (transpose-matrix a)
+(define (matrix-transpose a)
  (map-n-vector (lambda (j) (matrix-column-ref a j)) (matrix-columns a)))
 
 (define (outer-product f u v)
@@ -341,7 +344,7 @@
 
 (define (self-outer-product f v) (outer-product f v v))
 
-(define (m* a b) (outer-product dot a (transpose-matrix b)))
+(define (m* a b) (outer-product dot a (matrix-transpose b)))
 
 (define (v*m v a) (m* (vector->row-matrix v) a))
 
@@ -719,7 +722,7 @@
 		    (matrix-set! v j k p)))
 		  n))))
    (- n 1))
-  (list d (transpose-matrix v))))
+  (list d (matrix-transpose v))))
 
 (define (eigenvalues a) (first (jacobi a)))
 
@@ -736,7 +739,7 @@
 (define (clip-eigenvalues a v)
  (let* ((j (jacobi a))
 	(e (second j)))
-  (m* (transpose-matrix e)
+  (m* (matrix-transpose e)
       (m* (vector->diagonal-matrix (map-vector max v (first j))) e))))
 
 ;;; The following two routines are limited to 2-by-2 matricies.
@@ -756,12 +759,12 @@
 	   (- (vector-ref (eigenvalues m) 1) (matrix-ref m 1 1)))))
 
 (define (left-pseudo-inverse m)
- (let ((inverse (invert-matrix (m* (transpose-matrix m) m))))
-  (if inverse (m* inverse (transpose-matrix m)) #f)))
+ (let ((inverse (invert-matrix (m* (matrix-transpose m) m))))
+  (if inverse (m* inverse (matrix-transpose m)) #f)))
 
 (define (right-pseudo-inverse m)
- (let ((inverse (invert-matrix (m* m (transpose-matrix m)))))
-  (if inverse (m* (transpose-matrix m) inverse) #f)))
+ (let ((inverse (invert-matrix (m* m (matrix-transpose m)))))
+  (if inverse (m* (matrix-transpose m) inverse) #f)))
 
 ;;; Sparse Matrices
 

@@ -76,9 +76,10 @@ of this code is originally from Jeff Siskind's QobiScheme.
 <procedure>(m+ a b)</procedure>
 <procedure>(m- a b)</procedure>
 <procedure>(m+k m k)</procedure>
+<procedure>(m+k-diagonal m k)</procedure>
 <procedure>(k+m k m)</procedure>
 <procedure>(m*v a v)</procedure>
-<procedure>(transpose-matrix a)</procedure>
+<procedure>(matrix-transpose a)</procedure>
 <procedure>(outer-product f u v)</procedure>
 <procedure>(self-outer-product f v)</procedure>
 <procedure>(m* a b)</procedure>
