@@ -858,7 +858,7 @@
 
 (define (unshape-matrix m)
  (if (and (not (equal? m '#())) (matrix? m))
-     (unshape-matrix (reduce-vector append-vector m '#()))
+     (unshape-matrix (qreduce-vector append-vector m '#()))
      m))
 
 (define (crop m x y w h)
