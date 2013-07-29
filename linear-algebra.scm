@@ -867,6 +867,18 @@
    (subvector row x (+ x w)))
   (subvector m y (+ y h))))
 
+(define (submatrix m x-offset y-offset x-size y-size)
+ (define (safe-matrix-ref m r c)
+  (if (and (< r (matrix-rows m)) (< c (matrix-columns m)))
+      (matrix-ref m r c)
+      #f))
+ (map-n-vector
+  (lambda (x)
+   (map-n-vector
+    (lambda (y) (safe-matrix-ref m (+ x x-offset) (+ y y-offset)))
+    y-size))
+  x-size))
+
 (define (matrix-ref-nd m . is)
  (if (= (length is) 1)
      (vector-ref m (first is))

@@ -117,6 +117,7 @@ of this code is originally from Jeff Siskind's QobiScheme.
 <procedure>(shape-matrix v c)</procedure>
 <procedure>(unshape-matrix m)</procedure>
 <procedure>(crop m x y w h)</procedure>
+<procedure>(submatrix m x-offset y-offset x-size y-size)</procedure>
 <procedure>(matrix-ref-nd m . is)</procedure>
 <procedure>(matrix-3d-ref a s i j)</procedure>
 <procedure>(matrix-set-nd! m v . is)</procedure>
